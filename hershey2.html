@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+      h2 {
+        color: black;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+<body class="container">
+	<div class="row header">
+        <h1>Football Games and Candy Sales in Four States</h1>
+        <p>Data -- This data has been provided by the Hershet Chocolate company. The data contains the sales of candy stores during 15 consequetive saturdays (with football games), their distance from the stadium where the football took place, the sales difference between 2014 and the same date in 2015, as well as the avergae of weekly sales in both years. The data also indicates whether there was an away game or home game in either 2014 or 2015 during that speciic week. </p>
+        <p>The goal of this visualization is to discover this dataset to see how different market channels and states affect the sales. Also, we want to see if there is any difference between those weeks with home game (2015) and away game (2014) versus the opposite.</p>
+    </div>
+	<div class="row">
+		<div id="chart1"></div>
+	</div>
+    <div class="row text">
+        <br>
+        <p> The bar plot above is intended to show to what extent different states and channels are different in terms of average sale. For this case, bar plot is one of the best options, as we only have two categorical variables (i.e. state and channel) and one numerical (average sale). One categorical variable can be presented in one axis and the other can be presented by coloring different levels of the variable. As we can see here, we have managed to show that: </p>
+
+        <p>1- The whole sale club sells the highest on average and it can only be found in Maryland.</p>
+         <p>2- The average sale in Maryland and Colorado are higher than th eother two </p>
+         <p>3- Grocery stores are the most successful channels except for Maryland's case</p>
+        <br>
+    </div>
+	<div class="row">
+		<div id="chart2"></div>
+	</div>
+	<div class="row text">
+	    <br>
+        <p> Visualizing three variables in the most simple way is a bit more challenging. In the bisualiztion above, we have the games variable, the state as well as the distance level from stadium. Dimple js. has the bubblechart option which enables us to visualize this type of data in the most simple way. In this visualization we can see that: </p>
+        <p> 1- stores within 10 km of the stadium do not show that much f a difference in sales in neither of states. Although we can see that Maryland and Colorado show a slightly higher sale within 10km of the stadium when there was a home game in that stadium. </p>
+
+        <p>2- For both colorado and Maryland the difference is more evident in those stores that are within 10-50 kms from the stadium. Louisiana barely shows any difference during the away and home gomes. In case of alabama, distance is that influential and all the stores do constantly better during the home games. </p>
+
+        <br>
+    </div>
+
+	<div class="row">
+		<div id="chart3"></div>
+	</div>
+	<div class="row text">
+	    <br>
+        <p> We also wanted to investigate the trend of sales in the four states in this 15 weeks. Line chart is a good option when it comes to time series. Our surveys indicated that lines alone while indicative of overall trend, cannot fully show the extent of diffeence between break points. To address this, I added a bubble chart to accentuate the average sale in each data for each state. the chart above successfuly shows the following: </p>
+        <p>1- The hierarchy of sales for different states is more evident here. </p>
+        <p>2- We can see that the week of October's end there is a jump in average sale (probably because of Holloween) </p>
+        <p>3- The jumps for Maryland and Colorado are more noticable compared the other two states. </p>
+        <br>
+    </div>
+
+    <div class="row">
+		<div id="chart4"></div>
+	</div>
+	<div class="row text">
+	    <br>
+        <p>It would be interesting to also check out the perfomance of different channels. Since the variables are rather the same, we use the same type of visualization. This chart shows the following: </p>
+         <p>1- Generally we can see how sales' trends for different channels compare to one another.</p>
+        <p>2- Convenience store are not as successful during the Holloween week compared to other channels.</p>
+        <p>3- Unlike other channels, Wholesale clubs are not as successful during the last week of November. Although, recall that our datapoints were less for Wholesale clubs as they can only be found in Maryland.</p>
+        <br>
+    </div>
+
+	<script type="text/javascript">
+		// 1 - mean sale based on CHANNEL and
+		var width = 1000,
+		    height = 400;
+		var svg1 = dimple.newSvg("#chart1", width, height);
+		d3.csv("Game_Hershey.csv", function(data){
+			var chart = new dimple.chart(svg1, data);
+		    x = chart.addCategoryAxis("x", ["STATE","CHANNEL"]);
+		    x.title = "State";
+		    chart.addMeasureAxis("y", "Average Sale");
+		    chart.addSeries("CHANNEL", dimple.plot.bar);
+			chart.addLegend(65, 10, 510, 20, "left");
+			chart.draw();
+		});
+		// 2 - Titanic survivors based on age group
+		var width = 1000,
+		    height = 400;
+		var svg2 = dimple.newSvg("#chart2", width, height);
+		d3.csv("Game_Hershey.csv", function(data){
+			var chart = new dimple.chart(svg2, data);
+		    x = chart.addCategoryAxis("x", ["DIST","GAME"]);
+		    x.addOrderRule(["<10km","10-50km","50-126km","126-179km",">179km"]);
+		    x.title = "Distance from Stadium";
+		    y = chart.addCategoryAxis("y", "STATE");
+		    y.title = "State";
+		    chart.addMeasureAxis("z", "Difference in Sale");
+		    chart.addSeries(["GAME"] , dimple.plot.bubble);
+			chart.addLegend(65, 10, 510, 20, "left");
+			chart.draw();
+		});	
+		// 3 - Titanic survivors based on parents/children 
+		var width = 1000,
+		    height = 400;
+		var svg3 = dimple.newSvg("#chart3", width, height);
+		d3.csv("Game_Hershey.csv", function(data){
+			var chart = new dimple.chart(svg3, data);
+		    x = chart.addTimeAxis("x", "DATE"); 
+		    x.title = "Date (Month/Day)";
+            x.addOrderRule("DATE");
+		    x.tickFormat = "%m/%d";
+		    x.dateParseFormat = "%m/%d/%Y";
+		    chart.addMeasureAxis("y", "Average Sale");
+		    chart.addMeasureAxis("z", "Average Sale");
+		    chart.addSeries(["STATE"], dimple.plot.bubble);
+		    chart.addSeries(["STATE"], dimple.plot.line);
+		    chart.addLegend(65, 10, 510, 20, "left");
+			chart.draw();
+		});	
+
+		// 4 - Titanic survivors based on parents/children 
+		var width = 1000,
+		    height = 400;
+		var svg4= dimple.newSvg("#chart4", width, height);
+		d3.csv("Game_Hershey.csv", function(data){
+			var chart = new dimple.chart(svg4, data);
+		    x = chart.addTimeAxis("x", "DATE"); 
+		    x.title = "Date (Month/Day)";
+            x.addOrderRule("DATE");
+		    x.tickFormat = "%m/%d";
+		    x.dateParseFormat = "%m/%d/%Y";
+		    chart.addMeasureAxis("y", "Average Sale");
+		    z = chart.addMeasureAxis("z", "Average Sale");
+		    chart.addSeries(["CHANNEL"], dimple.plot.bubble);
+		    chart.addSeries(["CHANNEL"], dimple.plot.line);
+		    chart.addLegend(65, 10, 510, 20, "left");
+			chart.draw();
+		});	
+	    
+	</script>
+</body>
+</html>
