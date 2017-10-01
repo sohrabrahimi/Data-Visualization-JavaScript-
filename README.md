@@ -1,7 +1,7 @@
 # Data-Visualization-JavaScript-
 In this project I have visualized the Hershey data on candy sales for four states. I have used d3.js and dimple.js to create interactive visualizations for this data.
 
-# Data-
+# Data
 This data has been provided by the Hershey Chocolate company. The data contains the sales of candy stores during 15 consequetive saturdays (with football games), the sales difference between 2014 and the corresponding date in 2015 with different type of game (i.e. Home and Away), as well as the average of weekly sales in both years.
 
 # Purpose 
